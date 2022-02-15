@@ -12,7 +12,6 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,7 +21,7 @@ import javax.swing.JTextField;
 
 /**
  * @author Andrey Fabricio
- * Última atualização: 14/02/2022
+ * Última atualização: 15/02/2022
  *
  */
 public class DesafioSenha extends JFrame implements ActionListener{
@@ -87,18 +86,19 @@ public class DesafioSenha extends JFrame implements ActionListener{
 		container.setLayout(null);
     	
     	// Tamanho e posição dos componentes
-    	textoExplicativo.setBounds(20,10,400,150);
+    	textoExplicativo.setBounds(20,10,360,150);
     	digiteSenha.setBounds(20,140,250,70);
     	senhaUsuario.setBounds(20, 185, 200, 20);
     	btn.setBounds(220, 185, 85, 19);
-    	erro.setBounds(20, 200, 400, 20);
-    	sugestoes.setBounds(20, 220, 400, 150);
-    	ajuda.setBounds(20, 360, 400, 150);
+    	erro.setBounds(20, 200, 360, 20);
+    	sugestoes.setBounds(20, 220, 360, 150);
+    	ajuda.setBounds(20, 360, 360, 150);
     	
+    	// Configura a caixa de texto
     	sugestoes.setLineWrap(true);
     	sugestoes.setEditable(false);
     	sugestoes.setVisible(true);    	
-    	sugestoes.setFont(new Font("Serif",Font.BOLD,15));// Muda o tamanho e a fonte do texto
+    	sugestoes.setFont(new Font("Serif",Font.PLAIN,15));// Muda o tamanho e a fonte do texto
     	
     	erro.setForeground(new java.awt.Color(255,0,0)); // Muda para vermelho a cor do erro
     	
@@ -130,14 +130,59 @@ public class DesafioSenha extends JFrame implements ActionListener{
 		// Se o botão for clicado ou o usuário apertar a tecla enter
     	if (e.getSource() == btn || e.getSource() == senhaUsuario) {
         	erro.setText(""); // Reseta o erro
-        	testaSenha(); // Cria a escada
+        	sugestoes.setText(""); // Reseta a caixa de sugestões
+        	testaSenha(); // Testa a senha
         	senhaUsuario.setText(""); // Reseta o input do usuário
         }
 		
 	}
 	
 	private void testaSenha() {
-		// TODO Auto-generated method stub
+		
+		// senhaUsuario -> Recebe do usuario uma senha através da caixa de texto
+		// tempTexto -> Recebe o texto de ajuda para o usuário
+		String senha = senhaUsuario.getText(), tempTexto = ""; 
+		boolean senhaSegura = true;
+		
+		
+		if(senha != null && !senha.equals("")){ // Testa a senha somente se uma senha foi digitada
+			
+			if(senha.length() < 6) { // Testa se a senha tem ao menos seis digitos
+				tempTexto += String.format("A senha %s contém menos de 6 caracteres.\r\n"
+						+ "Adicione%2d caracteres para a senha ficar mais segura.\r\n", senha, (6 - senha.length()));
+				senhaSegura = false;
+			}
+			if(!senha.matches("(?=.*[0-9]).*")) { // Testa se a senha possui ao menos um número
+				tempTexto += String.format("A senha %s não possui números.\r\n", senha);
+				senhaSegura = false;
+			}
+			if(!senha.matches("(?=.*[A-Z]).*")) { // Testa se a senha possui ao menos uma letra maiúscula
+				tempTexto += String.format("A senha %s não possui letras maiúsculas.\r\n", senha);
+				senhaSegura = false;
+			}
+			if(!senha.matches("(?=.*[a-z]).*")) { // Testa se a senha possui ao menos uma letra minúscula
+				tempTexto += String.format("A senha %s não possui letras minúsculas.\r\n", senha);
+				senhaSegura = false;
+			}			
+			if(!senha.matches("(?=.*[!@#$%^&*()-+]).*")) { // Testa se a senha possui caracteres especiais
+				tempTexto += String.format("A senha %s não possui caracteres especiais.\r\n", senha);
+				senhaSegura = false;
+			}
+			if(senha.matches("(?=.*\\s).*")){ // Testa se a senha possui espaços
+				tempTexto += String.format("A senha %s possui espaços.", senha);
+				senhaSegura = false;
+			}
+			if(senhaSegura) { // senhaSegura -> Se for true, imprime uma mensagem para o usuário
+				tempTexto = "Parabéns, a sua senha é segura.";
+			}
+		}
+		else {
+			// Imprime um texto de ajuda para o usuário caso ele não tenha digitado uma senha
+			tempTexto = "Digite uma senha";
+		}
+		
+		// Coloca na caixa de texto as sugestões para melhorar a senha
+		sugestoes.setText(tempTexto);
 		
 	}
 
@@ -147,9 +192,9 @@ public class DesafioSenha extends JFrame implements ActionListener{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Encerra o programa ao fechar a janela
         frame.setTitle("Desafio Capgemini - Senha"); // Define o titulo
         frame.pack(); // Minimiza os erros de tamanho do layout
-        frame.setSize(445, 540); // Define o tamanho do frame
+        frame.setSize(405, 540); // Define o tamanho do frame
         frame.setLocationRelativeTo(null); // Centraliza o frame
-        frame.setResizable(false);
+        frame.setResizable(false); // Bloqueia o usuário de mudar o tamanho da janela
         frame.setVisible(true); // Torna o frame visivel
 		
 	}
