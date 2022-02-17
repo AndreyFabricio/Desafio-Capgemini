@@ -13,7 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -24,7 +26,7 @@ import javax.swing.JTextField;
 
 /**
  * @author Andrey Fabricio
- * Última atualização: 15/02/2022
+ * Última atualização: 17/02/2022
  *
  */
 public class DesafioAnagrama extends JFrame implements ActionListener{
@@ -115,9 +117,7 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
 	private void criaAnagramas() {
 		
 		// Recebe a palavra original do usuário
-		String palavraOriginal = caixaPalavra.getText().replaceAll("\\s+", "");
-		
-		
+		String palavraOriginal = caixaPalavra.getText().replaceAll("[\\W]+", "");
 		
 		if (palavraOriginal.length() - 1 != 0 && palavraOriginal != null 
 				&& !palavraOriginal.equals("")) {
@@ -174,10 +174,18 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
 			
 		}
 		
-		String [] anagrms = tempstring.split("\\s+");
+		String[] anagramasRepetidos = tempstring.split("[\\s]+");
+		
+		Set<String> anagrms = new HashSet<String>();
+		
+		for (String anagrama : anagramasRepetidos) {
+			anagrms.add(anagrama);
+		}
 		
 		for (String palavra : anagrms) {
-			System.out.println(palavra);
+			
+			anagramas.setText(anagramas.getText() + palavra + " ");
+			
 		}
 		
 		
