@@ -1,7 +1,7 @@
 /**
  * Questão 3 do Desafio de Programação da Academia Capgemini
  * Esse programa lê uma String e informa 
- * qual é o número de pares de substrings que são anagramas
+ * qual é o número de pares de substrings dessa string que são anagramas
  *  
  */
 package main;
@@ -14,8 +14,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -26,7 +30,7 @@ import javax.swing.JTextField;
 
 /**
  * @author Andrey Fabricio
- * Última atualização: 17/02/2022
+ * Última atualização: 19/02/2022
  *
  */
 public class DesafioAnagrama extends JFrame implements ActionListener{
@@ -50,7 +54,7 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
 	JLabel palavra = new JLabel("Digite aqui a palavra para encontrar os anagramas:");
 	
 	// Input do usuario	
-	JTextField caixaPalavra = new JTextField();
+	static JTextField caixaPalavra = new JTextField();
 		
 	// Botão de confirmação
 	JButton btn = new JButton("Encontrar");
@@ -59,7 +63,7 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
 	JLabel erro = new JLabel("");
 	
 	// Caixa de texto
-    JTextArea anagramas = new JTextArea();    
+    static JTextArea anagramas = new JTextArea();    
 	
     public DesafioAnagrama() {
     	container.setLayout(null);
@@ -114,91 +118,58 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
 		
 	}
     
-	private void criaAnagramas() {
+	public void criaAnagramas() {
 		
-		// Recebe a palavra original do usuário
 		String palavraOriginal = caixaPalavra.getText().replaceAll("[\\W]+", "");
 		
-		if (palavraOriginal.length() - 1 != 0 && palavraOriginal != null 
-				&& !palavraOriginal.equals("")) {
+		for(int i = 0; i < palavraOriginal.length(); i++) {
 			
-			for(int l = 0; l < palavraOriginal.length() + 1; l++) {
-				for(int m = 0; m < palavraOriginal.length() + 1; m++) {
-					if(l != m && l < m) {
-						char[] vetorPalavra = palavraOriginal.substring(l, m).toCharArray();
-						geraAnagrama(vetorPalavra, 0);
-					}
-					else if(l != m && l > m) {
-						char[] vetorPalavra = 
-								new StringBuilder(palavraOriginal.substring(m, l))
-								.reverse().toString().toCharArray();
-						geraAnagrama(vetorPalavra, 0);
-					}
+			String letras = palavraOriginal.charAt(i) + "";	
+			
+			for(int j = 0; j < palavraOriginal.length(); j++) {
+				
+				if(j != i) {
+					letras += palavraOriginal.charAt(j) + "";
 				}
+
+				permutation("", letras);
 			}
 		}
-		else {
-			// Se a palavra tem uma letra (ou nenhuma) ela não possui anagrama
-			anagramas.setText(String.format("A palavra \"%s\" não possui anagramas.", palavraOriginal));
+		
+		List<String> anagrms = Arrays.asList(anagramas.getText().split("[\\s]+"));
+		
+		List<String> anagrams = new ArrayList<String>();
+		
+		for(String combinacao : anagrms) {
+			
+			if(!anagrams.contains(combinacao)) {
+				anagrams.add(combinacao);
+			}
+			
 		}
+		
+		palavraOriginal = "";
+		
+		for(String anagram : anagrams) {
+			palavraOriginal += anagram + " ";
+		}
+		
+		anagramas.setText(palavraOriginal);
 		
 	}
 	
-	private void geraAnagrama(char[] vetorPalavra, int j) {
-		
-		String tempstring = "";
-		
-		if (j == vetorPalavra.length - 1) {
-			
-			for (int k = 0; k < vetorPalavra.length; k++) {
-				
-				tempstring += String.valueOf(vetorPalavra[k]);
-				
-			}		
-			
-			// vetorPalavra = 
-			//		Arrays.copyOf(vetorPalavra, vetorPalavra.length-1);
-					
-		}
-		else {
-			
-			geraAnagrama(vetorPalavra, j + 1);
-			
-			for(int i = j + 1; i < vetorPalavra.length; i++) {
-				mudaPos(vetorPalavra, j, i);
-				geraAnagrama(vetorPalavra, j + 1);
-				mudaPos(vetorPalavra, j, i);
-				tempstring += " ";
-			
-			}
-			
-		}
-		
-		String[] anagramasRepetidos = tempstring.split("[\\s]+");
-		
-		Set<String> anagrms = new HashSet<String>();
-		
-		for (String anagrama : anagramasRepetidos) {
-			anagrms.add(anagrama);
-		}
-		
-		for (String palavra : anagrms) {
-			
-			anagramas.setText(anagramas.getText() + palavra + " ");
-			
-		}
-		
-		
+	public static void permutation(String prefixo, String palavra) {
+	    int tamanhoPalavra = palavra.length();
+	    if (tamanhoPalavra == 0) {
+	    	anagramas.setText(anagramas.getText() + prefixo + " ");
+	    }
+	    else {
+	        for (int i = 0; i < tamanhoPalavra; i++)
+	            permutation(prefixo + palavra.charAt(i), 
+	            		palavra.substring(0, i) + palavra.substring(i+1, tamanhoPalavra));
+	    }
 	}
-
-	private void mudaPos(char[] vetorPalavra, int j, int i) {
-		char aux;
-		aux = vetorPalavra[i];
-		vetorPalavra[i] = vetorPalavra[j];
-		vetorPalavra[j] = aux;
-		
-	}
-
+	
 	public static void main(String[] args) {
 		
 		DesafioAnagrama frame=new DesafioAnagrama(); // Cria um novo frame
