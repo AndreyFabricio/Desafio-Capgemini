@@ -13,13 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -34,6 +28,11 @@ import javax.swing.JTextField;
  *
  */
 public class DesafioAnagrama extends JFrame implements ActionListener{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** Descrição do desafio:
 	 * Duas palavras podem ser consideradas anagramas de si mesmas se as letras de uma palavra
@@ -120,55 +119,54 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
     
 	public void criaAnagramas() {
 		
-		String palavraOriginal = caixaPalavra.getText().replaceAll("[\\W]+", "");
-		
-		for(int i = 0; i < palavraOriginal.length(); i++) {
-			
-			String letras = palavraOriginal.charAt(i) + "";	
-			
-			for(int j = 0; j < palavraOriginal.length(); j++) {
-				
-				if(j != i) {
-					letras += palavraOriginal.charAt(j) + "";
-				}
-
-				permutation("", letras);
-			}
-		}
-		
-		List<String> anagrms = Arrays.asList(anagramas.getText().split("[\\s]+"));
+		String palavra = caixaPalavra.getText().replaceAll("[\\W]+", "");
+		String textoTemp = "";
 		
 		List<String> anagrams = new ArrayList<String>();
 		
-		for(String combinacao : anagrms) {
+		for (int i = 0; i < palavra.length(); i++) {
+	        for (int j = i + 1; j <= palavra.length(); j++) {
+	        	anagrams.add(palavra.substring(i, j));
+	        }
+	    }
+		
+		boolean[] pos = new boolean[anagrams.size()];
+		boolean pares = false;
+		
+		for(int k = 0; k < anagrams.size(); k++) {
 			
-			if(!anagrams.contains(combinacao)) {
-				anagrams.add(combinacao);
+			for (int l = 0; l < anagrams.size(); l++) {
+				
+				if (k != l && !pos[l] && sameChars(anagrams.get(k), anagrams.get(l))) {
+					
+					textoTemp += "[" + anagrams.get(k) + "," + anagrams.get(l) + "] ";
+					pos[l] = true;
+					pos[k] = true;
+					pares = true;
+					
+				}	
+				
 			}
-			
+		}			
+		
+		if(pares) {
+			textoTemp = "A palavra " + palavra + 
+			" possui os seguintes pares de anagramas:\r\n" + textoTemp;
+		}
+		else {
+			textoTemp = "A palavra " + palavra + " não possui anagramas.";
 		}
 		
-		palavraOriginal = "";
-		
-		for(String anagram : anagrams) {
-			palavraOriginal += anagram + " ";
-		}
-		
-		anagramas.setText(palavraOriginal);
-		
+		anagramas.setText(textoTemp);
 	}
 	
-	public static void permutation(String prefixo, String palavra) {
-	    int tamanhoPalavra = palavra.length();
-	    if (tamanhoPalavra == 0) {
-	    	anagramas.setText(anagramas.getText() + prefixo + " ");
-	    }
-	    else {
-	        for (int i = 0; i < tamanhoPalavra; i++)
-	            permutation(prefixo + palavra.charAt(i), 
-	            		palavra.substring(0, i) + palavra.substring(i+1, tamanhoPalavra));
-	    }
-	}
+	private boolean sameChars(String firstStr, String secondStr) {
+		  char[] first = firstStr.toCharArray();
+		  char[] second = secondStr.toCharArray();
+		  Arrays.sort(first);
+		  Arrays.sort(second);
+		  return Arrays.equals(first, second);
+		}
 	
 	public static void main(String[] args) {
 		
