@@ -1,6 +1,6 @@
 /**
  * Questão 2 do Desafio de Programação da Academia Capgemini
- * Esse programa lê uma String e informa qual é o número mínimo de
+ * Esse programa lê uma String que representa uma senha e informa qual é o número mínimo de
  * caracteres que devem ser adicionados para essa String qualquer ser considerada segura
  * O frontend da aplicação utiliza Java Swing enquanto que o backend é escrito em Java 
  *  
@@ -21,10 +21,15 @@ import javax.swing.JTextField;
 
 /**
  * @author Andrey Fabricio
- * Última atualização: 15/02/2022
+ * Última atualização: 19/02/2022
  *
  */
 public class DesafioSenha extends JFrame implements ActionListener{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Descrição do desafio:
@@ -41,15 +46,13 @@ public class DesafioSenha extends JFrame implements ActionListener{
 	 * senha forte. Para ajudar Débora, construa um algoritmo que informe qual é o número mínimo de
 	 * caracteres que devem ser adicionados para uma string qualquer ser considerada segura.
 	 * 
-	 * 
-	 * e informa qual é o número mínimo de
-* caracteres que devem ser adicionados para essa String qualquer ser considerada segura
 	 */
 	
 	Container container = getContentPane();
 	
 	// Texto explicativo
-	JLabel textoExplicativo = new JLabel("<html>Esse programa lê uma senha e informa se ela é ou não segura.<br/>"
+	JLabel textoExplicativo = new JLabel(
+			"<html>Esse programa lê uma senha e informa se ela é ou não segura.<br/>"
 			+ "O programa pode sugerir uma nova senha (mais segura).<br/>"
 			+ "Essa nova senha será criada com base na senha informada.<br/><br/>"
 			+ "As senhas testadas e sugeridas por esse programa<br/> "
@@ -97,10 +100,13 @@ public class DesafioSenha extends JFrame implements ActionListener{
     	// Configura a caixa de texto
     	sugestoes.setLineWrap(true);
     	sugestoes.setEditable(false);
-    	sugestoes.setVisible(true);    	
-    	sugestoes.setFont(new Font("Serif",Font.PLAIN,15));// Muda o tamanho e a fonte do texto
+    	sugestoes.setVisible(true);    
     	
-    	erro.setForeground(new java.awt.Color(255,0,0)); // Muda para vermelho a cor do erro
+    	// Muda o tamanho e a fonte do texto
+    	sugestoes.setFont(new Font("Serif",Font.PLAIN,15));
+    	 
+    	// Muda para vermelho a cor do erro
+    	erro.setForeground(new java.awt.Color(255,0,0));
     	
     	// Coloca os componentes na janela
     	container.add(textoExplicativo);
@@ -120,7 +126,7 @@ public class DesafioSenha extends JFrame implements ActionListener{
     	// Cria um listener para a tecla "Enter"
     	senhaUsuario.addActionListener(this); 
     	
-    	// Adiciona borda
+    	// Adiciona borda a caixa de sugestões/texto
     	sugestoes.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 	}
 	
@@ -144,41 +150,55 @@ public class DesafioSenha extends JFrame implements ActionListener{
 		String senha = senhaUsuario.getText(), tempTexto = ""; 
 		boolean senhaSegura = true;
 		
-		
-		if(senha != null && !senha.equals("")){ // Testa a senha somente se uma senha foi digitada
+		// Testa a senha somente se uma senha foi digitada
+		if(senha != null && !senha.equals("")){ 
 			
-			if(senha.length() < 6) { // Testa se a senha tem ao menos seis digitos
-				tempTexto += String.format("A senha %s contém menos de 6 caracteres.\r\n"
-						+ "Adicione%2d caracteres para a senha ficar mais segura.\r\n", senha, (6 - senha.length()));
+			// Testa se a senha tem ao menos seis digitos
+			if(senha.length() < 6) { 
+				tempTexto += String.format(
+						"A senha %s contém menos de 6 caracteres.\r\n"
+						+ "Adicione%2d caracteres para a senha ficar mais segura.\r\n", 
+						senha, (6 - senha.length()));
 				senhaSegura = false;
 			}
-			if(!senha.matches("(?=.*[0-9]).*")) { // Testa se a senha possui ao menos um número
-				tempTexto += String.format("A senha %s não possui números.\r\n", senha);
+			// Testa se a senha possui ao menos um número
+			if(!senha.matches("(?=.*[0-9]).*")) { 
+				tempTexto += String.format(
+						"A senha %s não possui números.\r\n", senha);
 				senhaSegura = false;
 			}
-			if(!senha.matches("(?=.*[A-Z]).*")) { // Testa se a senha possui ao menos uma letra maiúscula
-				tempTexto += String.format("A senha %s não possui letras maiúsculas.\r\n", senha);
+			// Testa se a senha possui ao menos uma letra maiúscula
+			if(!senha.matches("(?=.*[A-Z]).*")) { 
+				tempTexto += String.format(
+						"A senha %s não possui letras maiúsculas.\r\n", senha);
 				senhaSegura = false;
 			}
-			if(!senha.matches("(?=.*[a-z]).*")) { // Testa se a senha possui ao menos uma letra minúscula
-				tempTexto += String.format("A senha %s não possui letras minúsculas.\r\n", senha);
+			// Testa se a senha possui ao menos uma letra minúscula
+			if(!senha.matches("(?=.*[a-z]).*")) { 
+				tempTexto += String.format(
+						"A senha %s não possui letras minúsculas.\r\n", senha);
 				senhaSegura = false;
 			}			
-			if(!senha.matches("(?=.*[!@#$%^&*()-+]).*")) { // Testa se a senha possui caracteres especiais
-				tempTexto += String.format("A senha %s não possui caracteres especiais.\r\n", senha);
+			// Testa se a senha possui caracteres especiais
+			if(!senha.matches("(?=.*[!@#$%^&*()-+]).*")) { 
+				tempTexto += String.format(
+						"A senha %s não possui caracteres especiais.\r\n", senha);
 				senhaSegura = false;
 			}
-			if(senha.matches("(?=.*\\s).*")){ // Testa se a senha possui espaços
-				tempTexto += String.format("A senha %s possui espaços.", senha);
+			// Testa se a senha possui espaços
+			if(senha.matches("(?=.*\\s).*")){ 
+				tempTexto += String.format(
+						"A senha %s possui espaços.", senha);
 				senhaSegura = false;
 			}
-			if(senhaSegura) { // senhaSegura -> Se for true, imprime uma mensagem para o usuário
+			// senhaSegura -> Se for verdadeiro, imprime uma mensagem para o usuário
+			if(senhaSegura) { 
 				tempTexto = "Parabéns, a sua senha é segura.";
 			}
 		}
 		else {
 			// Imprime um texto de ajuda para o usuário caso ele não tenha digitado uma senha
-			tempTexto = "Digite uma senha";
+			tempTexto = "Digite uma senha.";
 		}
 		
 		// Coloca na caixa de texto as sugestões para melhorar a senha
