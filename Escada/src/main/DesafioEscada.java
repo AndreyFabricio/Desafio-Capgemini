@@ -7,23 +7,33 @@
  */
 package main;
 
+import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
  * @author Andrey Fabricio
- * Ultima atualização: 14/02/2022
+ * Ultima atualização: 19/02/2022
  * 
  */
 public class DesafioEscada extends JFrame implements ActionListener {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Descrição do desafio:
 	 * Escreva um algoritmo que mostre na tela uma escada de tamanho n 
@@ -40,7 +50,7 @@ public class DesafioEscada extends JFrame implements ActionListener {
 			+ "Para começar, digite o tamanho da escada e depois clique em \"Criar\"</html>");
 	
 	// Pede ao usuario para digitar o tamanho desejado da escada
-	JLabel textoEscada = new JLabel("Digite o tamanho da escada (máx 22):");
+	JLabel textoEscada = new JLabel("Digite o tamanho da escada:");
 		
 	// Input do usuario	
 	static JTextField textoUsuario = new JTextField();	
@@ -49,11 +59,12 @@ public class DesafioEscada extends JFrame implements ActionListener {
 	JButton btn = new JButton("Criar");
 	
 	// Texto de erro
-	 static JLabel erro = new JLabel("");	
+	static JLabel erro = new JLabel("");	
 	
 	// Area aonde ficará a escada
-    static JLabel escada = new JLabel("");
+    static JTextArea escada = new JTextArea("");
     
+    // Barras de rolagem
     JScrollPane jsp = new JScrollPane(escada);
     
     public DesafioEscada() {    	
@@ -63,15 +74,16 @@ public class DesafioEscada extends JFrame implements ActionListener {
     	// Tamanho e posição dos componentes
     	textoExplicativo.setBounds(20,10,400,30);
     	textoEscada.setBounds(20,30,250,70);
-    	textoUsuario.setBounds(235, 55, 20, 20);
-    	btn.setBounds(255, 55, 65, 19);
+    	textoUsuario.setBounds(185, 55, 40, 20);
+    	btn.setBounds(225, 55, 65, 19);
     	erro.setBounds(20, 80, 400, 20);
-    	escada.setBounds(20,100,400,450);
+    	jsp.setBounds(20,100,400,450);
     	
-    	escada.setVisible(false); // A area só fica visivel após a confirmação do usuario    	
-    	escada.setFont(new Font("Monospaced",Font.BOLD,15));// Muda o tamanho e a fonte da escada
-    	
-    	erro.setForeground(new java.awt.Color(255,0,0)); // Muda para vermelho a cor do erro
+    	// Muda o tamanho e a fonte da escada
+    	escada.setFont(new Font("Monospaced",Font.BOLD,15));
+    	 
+    	// Muda para vermelho a cor do erro
+    	erro.setForeground(new java.awt.Color(255,0,0));
     	
     	// Coloca os componentes na janela
     	container.add(textoExplicativo);
@@ -79,7 +91,18 @@ public class DesafioEscada extends JFrame implements ActionListener {
     	container.add(textoUsuario);
     	container.add(btn);
     	container.add(erro);
-    	container.add(escada);
+    	container.add(jsp);
+    	
+    	jsp.setPreferredSize(new Dimension(400, 450));
+    	
+    	// Adiciona borda a caixa do texto
+    	jsp.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+    	
+    	// Mostra a barra de rolagem vertical quando necessário
+    	jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+    	
+    	// Mostra a barra de rolagem horizontal quando necessário
+    	jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);  
     	
     	// Adiciona um listener para o botão
     	btn.addActionListener(this);
@@ -98,7 +121,6 @@ public class DesafioEscada extends JFrame implements ActionListener {
 		// Se o botão for clicado ou o usuário apertar a tecla enter
     	if (e.getSource() == btn || e.getSource() == textoUsuario) {
         	erro.setText(""); // Reseta o erro
-        	escada.setVisible(false); // Esconde a escada atual
         	criaEscada(); // Cria a escada
         	textoUsuario.setText(""); // Reseta o input do usuário
         }
@@ -107,41 +129,39 @@ public class DesafioEscada extends JFrame implements ActionListener {
     
     private static void criaEscada() {
 		
-    	String textoEscada = "<html>";
+    	String textoEscada = "";
     	int tamanho = 0;
     	boolean valido = true;
     	
     	try {
-    		tamanho = Integer.parseInt(textoUsuario.getText()); // Pass user input to Long
-        } catch(NumberFormatException nfe) {        	
+    		// Tenta transformar a entrada do usuário em um número inteiro
+    		tamanho = Integer.parseInt(textoUsuario.getText()); 
+        } catch(NumberFormatException nfe) {  
+        	// Se a entrada for inválida passa uma mensagem de erro para o usuário  
+        	// e torna o a entrada inválida
         	erro.setText("O valor \"" + textoUsuario.getText() +"\" não é válido");
-        	valido = false; // Error makes input invalid
-        }
-        
-        if (tamanho < 1 || tamanho > 22) {
-        	erro.setText("O valor \"" + textoUsuario.getText() +"\" "
-        			+ " não é um valor positivo válido");
-        	valido = false; // Error makes input invalid
+        	valido = false; 
         }
     	
-        if(valido) {
+    	// Se o tamanho for 0 ou negativo, mostra um erro
+        if (tamanho < 1) {
+        	erro.setText("O valor \"" + textoUsuario.getText() +"\" "
+        			+ " não é um valor positivo válido");
+        	valido = false; // A entrada se torna então inválida
+        }
+    	
+        if(valido) { // Se a entrada do usuário for válida
         	// Criação da escada
-    		for(int i = 1; i <= tamanho; i++) {
-    			// Cria os espaços
-    			for(int j = 1; j <= tamanho - i; j++) {						
-    				textoEscada += "&nbsp;";
-    			}
-    			// Cria os asteriscos
-    			for(int k = 1; k <= i; k++) {
+    		for(int i = 1; i <= tamanho; i++) {    			
+    			for(int j = 1; j <= tamanho - i; j++)// Cria os espaços
+    				textoEscada += " ";
+    			for(int k = 1; k <= i; k++) // Cria os asteriscos
     				textoEscada += "*";
-    			}
-    			// Pula a linha
-    			textoEscada += "<br/>";
+    			if(i != tamanho)// Pula a linha
+    				textoEscada += "\n";
     		}
-    		textoEscada += "</html>";
     		
     		// Coloca a escada na janela
-    		escada.setVisible(true);
     		escada.setText(textoEscada);
         }
 		
@@ -153,9 +173,9 @@ public class DesafioEscada extends JFrame implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Encerra o programa ao fechar a janela
         frame.setTitle("Desafio Capgemini - Escada"); // Define o titulo
         frame.pack(); // Minimiza os erros de tamanho do layout
-        frame.setSize(440, 600); // Define o tamanho do frame
+        frame.setSize(445, 600); // Define o tamanho do frame
         frame.setLocationRelativeTo(null); // Centraliza o frame
-        frame.setResizable(false);
+        frame.setResizable(false); // Impede o usário de mudar o tamanho da janela
         frame.setVisible(true); // Torna o frame visivel
 		
 	}
