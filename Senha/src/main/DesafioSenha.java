@@ -137,17 +137,17 @@ public class DesafioSenha extends JFrame implements ActionListener{
     	if (e.getSource() == btn || e.getSource() == senhaUsuario) {
         	erro.setText(""); // Reseta o erro
         	sugestoes.setText(""); // Reseta a caixa de sugestões
-        	testaSenha(); // Testa a senha
+        	sugestoes.setText(testaSenha(senhaUsuario.getText())); // Testa a senha
         	senhaUsuario.setText(""); // Reseta o input do usuário
         }
 		
 	}
 	
-	private void testaSenha() {
+	public String testaSenha(String senha) {
 		
 		// senhaUsuario -> Recebe do usuario uma senha através da caixa de texto
 		// tempTexto -> Recebe o texto de ajuda para o usuário
-		String senha = senhaUsuario.getText(), tempTexto = ""; 
+		String tempTexto = ""; 
 		boolean senhaSegura = true;
 		
 		// Testa a senha somente se uma senha foi digitada
@@ -198,11 +198,11 @@ public class DesafioSenha extends JFrame implements ActionListener{
 		}
 		else {
 			// Imprime um texto de ajuda para o usuário caso ele não tenha digitado uma senha
-			tempTexto = "Digite uma senha.";
+			erro.setText("Digite uma senha");
 		}
 		
 		// Coloca na caixa de texto as sugestões para melhorar a senha
-		sugestoes.setText(tempTexto);
+		return tempTexto;
 		
 	}
 

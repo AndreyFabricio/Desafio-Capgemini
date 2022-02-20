@@ -121,13 +121,13 @@ public class DesafioEscada extends JFrame implements ActionListener {
 		// Se o botão for clicado ou o usuário apertar a tecla enter
     	if (e.getSource() == btn || e.getSource() == textoUsuario) {
         	erro.setText(""); // Reseta o erro
-        	criaEscada(); // Cria a escada
+        	escada.setText(criaEscada()); // Cria a escada
         	textoUsuario.setText(""); // Reseta o input do usuário
         }
 		
 	}
     
-    private static void criaEscada() {
+    public String criaEscada() {
 		
     	String textoEscada = "";
     	int tamanho = 0;
@@ -151,22 +151,26 @@ public class DesafioEscada extends JFrame implements ActionListener {
         }
     	
         if(valido) { // Se a entrada do usuário for válida
-        	// Criação da escada
-    		for(int i = 1; i <= tamanho; i++) {    			
-    			for(int j = 1; j <= tamanho - i; j++)// Cria os espaços
-    				textoEscada += " ";
-    			for(int k = 1; k <= i; k++) // Cria os asteriscos
-    				textoEscada += "*";
-    			if(i != tamanho)// Pula a linha
-    				textoEscada += "\n";
-    		}
-    		
-    		// Coloca a escada na janela
-    		escada.setText(textoEscada);
+        	textoEscada += GeraEscada(tamanho);
         }
+		return textoEscada;
 		
 	}
 	
+	public String GeraEscada(int tamanho) {
+		// Criação da escada
+		String texto = "";
+		for(int i = 1; i <= tamanho; i++) {    			
+			for(int j = 1; j <= tamanho - i; j++)// Cria os espaços
+				texto += " ";
+			for(int k = 1; k <= i; k++) // Cria os asteriscos
+				texto += "*";
+			if(i != tamanho)// Pula a linha
+				texto += "\n";
+		}
+		return texto;
+	}
+
 	public static void main(String[] args) {	
 				
 		DesafioEscada frame=new DesafioEscada(); // Cria um novo frame

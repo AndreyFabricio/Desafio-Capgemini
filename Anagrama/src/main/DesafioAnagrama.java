@@ -113,20 +113,19 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
 		// Se o botão for clicado ou o usuário apertar a tecla enter
     	if (e.getSource() == btn || e.getSource() == caixaPalavra) {
         	erro.setText(""); // Reseta o erro
-        	anagramas.setText(""); // Reseta a caixa de sugestões
-        	criaAnagramas(); // Testa a senha
+        	anagramas.setText(CriaAnagramas(caixaPalavra.getText())); // Testa a senha
         	caixaPalavra.setText(""); // Reseta o input do usuário
         }
 		
 	}
     
-	public void criaAnagramas() {		
+	public String CriaAnagramas(String palavra) {		
 		
 		// Executa somente se existe algum texto na caixa de texto
-		if(!caixaPalavra.getText().equals("")) {
+		if(!palavra.equals("")) {
 
 			// Pega o que o usuário digitou na caixa de texto
-			String palavra = caixaPalavra.getText().replaceAll("[\\W]+", "");
+			palavra = palavra.replaceAll("[\\W]+", "");
 			
 			// Armazena o texto que será exibido para o usuário
 			String textoTemp = "";
@@ -178,15 +177,15 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
 			}
 			
 			// Exibe para o usuário a mensagem final da execução atual
-			anagramas.setText(textoTemp);
+			return textoTemp;
 		}
 		else {
 			// Informa ao usuário que ele não digitou na caixa de texto
-			erro.setText("Digite uma palavra");
+			return "Digite uma palavra";
 		}
 	}
 	
-	private boolean testaAnagrama(String primeiraSubs, String segundaSubs) {
+	public boolean testaAnagrama(String primeiraSubs, String segundaSubs) {
 		// Testa se as substrings possuem as mesma letras (se são anagramas)
 		char[] primeira = primeiraSubs.toCharArray();
 		char[] segunda = segundaSubs.toCharArray();
