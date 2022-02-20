@@ -1,7 +1,7 @@
 /**
  * Questão 3 do Desafio de Programação da Academia Capgemini
  * Esse programa lê uma String e informa 
- * qual é o número de pares de substrings dessa string que são anagramas
+ * qual é o número de pares de substrings dessa string que são anagramas entre si
  *  
  */
 package main;
@@ -45,8 +45,8 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
 	
 	// Texto explicativo
 	JLabel textoExplicativo = new JLabel(
-			"<html>Esse programa encontra os anagramas de uma palavra.<br/>"
-			+ "Para começar, digite uma palavra e depois clique em \"Encontrar\"</html>"
+			"<html>Esse programa encontra os anagramas de uma palavra.<br/>" +
+			"Para começar, digite uma palavra e depois clique em \"Encontrar\"</html>"
 			);
 	
 	// Pede ao usuario para digitar a palavra
@@ -79,9 +79,12 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
     	anagramas.setLineWrap(true);
     	anagramas.setEditable(false);
     	anagramas.setVisible(true);    	
-    	anagramas.setFont(new Font("Serif",Font.PLAIN,15));// Muda o tamanho e a fonte do texto
     	
-    	erro.setForeground(new java.awt.Color(255,0,0)); // Muda para vermelho a cor do erro
+    	// Muda o tamanho e a fonte do texto
+    	anagramas.setFont(new Font("Serif",Font.PLAIN,15));
+    	 
+    	// Muda para vermelho a cor do erro
+    	erro.setForeground(new java.awt.Color(255,0,0));
     	
     	// Coloca os componentes na janela
     	container.add(textoExplicativo);
@@ -117,55 +120,80 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
 		
 	}
     
-	public void criaAnagramas() {
+	public void criaAnagramas() {		
 		
-		String palavra = caixaPalavra.getText().replaceAll("[\\W]+", "");
-		String textoTemp = "";
-		
-		List<String> anagrams = new ArrayList<String>();
-		
-		for (int i = 0; i < palavra.length(); i++) {
-	        for (int j = i + 1; j <= palavra.length(); j++) {
-	        	anagrams.add(palavra.substring(i, j));
-	        }
-	    }
-		
-		boolean[] pos = new boolean[anagrams.size()];
-		boolean pares = false;
-		
-		for(int k = 0; k < anagrams.size(); k++) {
+		// Executa somente se existe algum texto na caixa de texto
+		if(!caixaPalavra.getText().equals("")) {
+
+			// Pega o que o usuário digitou na caixa de texto
+			String palavra = caixaPalavra.getText().replaceAll("[\\W]+", "");
 			
-			for (int l = 0; l < anagrams.size(); l++) {
-				
-				if (k != l && !pos[l] && sameChars(anagrams.get(k), anagrams.get(l))) {
+			// Armazena o texto que será exibido para o usuário
+			String textoTemp = "";
+			
+			// Armazena os anagramas
+			List<String> anagrams = new ArrayList<String>();
+			
+			// Percorre a palavra duas vezes para criar as substrings da palavra
+			// Depois armazena as substrings na lista anagrams
+			for (int i = 0; i < palavra.length(); i++) {
+		        for (int j = i + 1; j <= palavra.length(); j++) {
+		        	anagrams.add(palavra.substring(i, j));
+		        }
+		    }
+			
+			// Armazena booleanos para checar se uma substring já foi utilizada
+			boolean[] pos = new boolean[anagrams.size()];
+			// "pares" se torna verdadeiro se houver ao menos um par de anagramas
+			boolean pares = false;
+			
+			// Percorre a lista de substrings para encontrar pares de anagramas
+			for(int k = 0; k < anagrams.size(); k++) {				
+				for (int l = 0; l < anagrams.size(); l++) {
+					// Se o par de substrings analisado não for exatamente a mesma substring
+					// E se o par de substrings possui as mesmas letras ele então é um anagrama
+					if (k != l && !pos[l] 
+							&& testaAnagrama(anagrams.get(k), anagrams.get(l))) {
+						// Adiciona o par de anagramas ao texto que será exibido ao usuário
+						textoTemp += "[" + anagrams.get(k) + "," + anagrams.get(l) + "] ";
+						// Coloca as substrings como utilizadas
+						pos[l] = true;
+						pos[k] = true;
+						// Informa que existe ao menos um par de anagramas
+						pares = true;
+						
+					}	
 					
-					textoTemp += "[" + anagrams.get(k) + "," + anagrams.get(l) + "] ";
-					pos[l] = true;
-					pos[k] = true;
-					pares = true;
-					
-				}	
-				
+				}
+			}			
+			
+			if(pares) { // Se existe ao menos um par de anagramas
+				// Finaliza o texto para o usuário
+				textoTemp = "A palavra " + palavra + 
+				" possui os seguintes pares de anagramas:\r\n" + textoTemp;
 			}
-		}			
-		
-		if(pares) {
-			textoTemp = "A palavra " + palavra + 
-			" possui os seguintes pares de anagramas:\r\n" + textoTemp;
+			else {
+				// Informa ao usuário que não existem anagramas
+				textoTemp = "A palavra " + palavra + " não possui anagramas.";
+			}
+			
+			// Exibe para o usuário a mensagem final da execução atual
+			anagramas.setText(textoTemp);
 		}
 		else {
-			textoTemp = "A palavra " + palavra + " não possui anagramas.";
+			// Informa ao usuário que ele não digitou na caixa de texto
+			erro.setText("Digite uma palavra");
 		}
-		
-		anagramas.setText(textoTemp);
 	}
 	
-	private boolean sameChars(String firstStr, String secondStr) {
-		  char[] first = firstStr.toCharArray();
-		  char[] second = secondStr.toCharArray();
-		  Arrays.sort(first);
-		  Arrays.sort(second);
-		  return Arrays.equals(first, second);
+	private boolean testaAnagrama(String primeiraSubs, String segundaSubs) {
+		// Testa se as substrings possuem as mesma letras (se são anagramas)
+		char[] primeira = primeiraSubs.toCharArray();
+		char[] segunda = segundaSubs.toCharArray();
+		Arrays.sort(primeira); // Organiza a primeira substring em ordem alfabetica
+		Arrays.sort(segunda);// Organiza a segunda substring em ordem alfabetica
+		// O método retorna verdadeiro se as substrings forem iguais
+		return Arrays.equals(primeira, segunda); 
 		}
 	
 	public static void main(String[] args) {
