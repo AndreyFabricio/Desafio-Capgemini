@@ -32,9 +32,9 @@ Duas palavras podem ser consideradas anagramas de si mesmas se as letras de uma 
 ## Instalação
 - Os executáveis foram testados apenas no Windows mas devem funcionar sem problemas no Linux, macOS ou em qualquer outro sistema que consiga instalar o Java jre
 - Não é necessário instalar nada (além do Java, caso não esteja instalado), bastando apenas executar os arquivos JAR
-- O JAR da primeira questão do desafio que cria uma Escada pode ser encontrado [aqui](https://github.com/AndreyFabricio/Desafio-Capgemini/blob/main/Escada/releases/DesafioEscada.jar)
-- O JAR da segunda questão do desafio sobre senhas pode ser encontrado [aqui](https://github.com/AndreyFabricio/Desafio-Capgemini/blob/main/Senha/releases/DesafioSenha.jar)
-- O JAR da terceira questão que gera substrings de anagramas pode ser encontrado [aqui](https://github.com/AndreyFabricio/Desafio-Capgemini/blob/main/Anagrama/releases/DesafioAnagrama.jar)
+- O JAR da primeira questão do desafio que cria uma Escada pode ser encontrado [aqui](https://github.com/AndreyFabricio/Desafio-Capgemini/releases/download/1.0.1/DesafioEscada.jar)
+- O JAR da segunda questão do desafio sobre senhas pode ser encontrado [aqui](https://github.com/AndreyFabricio/Desafio-Capgemini/releases/download/1.0.1/DesafioSenha.jar)
+- O JAR da terceira questão que gera substrings de anagramas pode ser encontrado [aqui](https://github.com/AndreyFabricio/Desafio-Capgemini/releases/download/1.0.1/DesafioAnagrama.jar)
 - Alternativamente os arquivos podem ser encontrados na página de releases do projeto [aqui](https://github.com/AndreyFabricio/Desafio-Capgemini/releases)
 
 ## Problemas Comuns
