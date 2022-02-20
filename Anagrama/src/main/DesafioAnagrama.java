@@ -113,7 +113,7 @@ public class DesafioAnagrama extends JFrame implements ActionListener{
 		// Se o botão for clicado ou o usuário apertar a tecla enter
     	if (e.getSource() == btn || e.getSource() == caixaPalavra) {
         	erro.setText(""); // Reseta o erro
-        	anagramas.setText(CriaAnagramas(caixaPalavra.getText())); // Testa a senha
+        	anagramas.setText(CriaAnagramas(caixaPalavra.getText().toLowerCase())); // Testa a senha
         	caixaPalavra.setText(""); // Reseta o input do usuário
         }
 		
